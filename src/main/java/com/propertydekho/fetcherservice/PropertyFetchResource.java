@@ -2,7 +2,11 @@ package com.propertydekho.fetcherservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.propertydekho.fetcherservice.config.KafkaConsumerConfiguration;
+//import com.propertydekho.fetcherservice.listener.AreaIndexerConsumer;
 import com.propertydekho.fetcherservice.models.*;
+//import org.apache.kafka.clients.consumer.ConsumerRecord;
+//import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,10 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.Duration;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -86,6 +88,25 @@ public class PropertyFetchResource
     }
 
     private List<PropFilterableSortableData> getPropsFromKafka(String area) {
+//        AreaIndexerConsumer areaIndexerConsumer =
+//                new AreaIndexerConsumer(KafkaConsumerConfiguration.getPropsConsumerConfig());
+//        areaIndexerConsumer.poll(Duration.ZERO);
+//        areaIndexerConsumer.seekToBeginning(areaIndexerConsumer.assignment());
+//        ConsumerRecords<String, AreaIndexer> records = areaIndexerConsumer.poll(Duration.ZERO);
+//        Iterable<ConsumerRecord<String, AreaIndexer>> areaIndexer = records.records("area_indexer");
+//        Iterator<ConsumerRecord<String, AreaIndexer>> iterator = areaIndexer.iterator();
+//        List<ConsumerRecord<String, AreaIndexer>> newProps = new ArrayList<>();
+//        while (iterator.hasNext()) {
+//            ConsumerRecord<String, AreaIndexer> next = iterator.next();
+//            if (next.key().equalsIgnoreCase(area)) {
+//                newProps.add(next);
+//            }
+//        }
+//
+//        return newProps.stream()
+//                .map(newProp -> newProp.value().getPropDetail())
+//                .collect(Collectors.toList());
+
         List<AreaIndexer> kafkaMessages = new ArrayList<>();
         kafkaMessages.add(AreaIndexer.builder().area("WhiteField").propDetail(
                 PropFilterableSortableData.builder().propID("3gdfgd4").propName("2BHK for sale in Whitefield, " +
