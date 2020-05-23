@@ -2,8 +2,15 @@ package com.propertydekho.fetcherservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.propertydekho.fetcherservice.config.KafkaConsumerConfiguration;
+import com.propertydekho.fetcherservice.listener.AreaIndexerConsumer;
 import com.propertydekho.fetcherservice.models.*;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -86,18 +93,20 @@ public class PropertyFetchResource
     }
 
     private List<PropFilterableSortableData> getPropsFromKafka(String area) {
-        List<AreaIndexer> kafkaMessages = new ArrayList<>();
-        kafkaMessages.add(AreaIndexer.builder().area("WhiteField").propDetail(
-                PropFilterableSortableData.builder().propID("3gdfgd4").propName("2BHK for sale in Whitefield, " +
-                        "Bangalore")
-                        .propPrice(4500000)
-                        .area("Whitefield")
-                        .bedroom("2BHK")
-                        .saleType("Resale")
-                        .constructionStatus("Ready to move").build()
-        ).build());
-        return kafkaMessages.stream()
-                .filter(kafkaMessage -> kafkaMessage.getArea().equalsIgnoreCase(area))
+        JsonDeserializer<AreaIndexer> valueDeserializer = new JsonDeserializer<>(AreaIndexer.class, false);
+        valueDeserializer.addTrustedPackages("com.propertydekho.createservice.models");
+        AreaIndexerConsumer areaIndexerConsumer =
+                new AreaIndexerConsumer(KafkaConsumerConfiguration.getPropsConsumerConfig(), new StringDeserializer()
+                        , valueDeserializer);
+        areaIndexerConsumer.subscribe(Collections.singletonList("area-indexer"));
+        areaIndexerConsumer.poll(Duration.ZERO);
+        areaIndexerConsumer.seekToBeginning(areaIndexerConsumer.assignment());
+        ConsumerRecords<String, AreaIndexer> records = areaIndexerConsumer.poll(Duration.ofDays(1));
+        List<ConsumerRecord<String, AreaIndexer>> consumerRecords = records.records(new TopicPartition("area-indexer"
+                , 0));
+        return consumerRecords.stream()
+                .map(ConsumerRecord::value)
+                .filter(areaIndexer -> areaIndexer.getArea().equalsIgnoreCase(area))
                 .map(AreaIndexer::getPropDetail)
                 .collect(Collectors.toList());
     }
