@@ -3,8 +3,10 @@ package com.propertydekho.fetcherservice;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertydekho.fetcherservice.config.KafkaConsumerConfiguration;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import com.propertydekho.fetcherservice.listener.AreaIndexerConsumer;
 import com.propertydekho.fetcherservice.models.*;
+import com.propertydekho.fetcherservice.service.PropertyService;
 import com.propertydekho.fetcherservice.views.FilterableAreaPropsViewInput;
 import com.propertydekho.fetcherservice.views.InitPropViewInput;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import utilities.Utilities;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,6 +36,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/")
 public class PropertyFetchResource
 {
+    @Resource
+    PropertyService propertyService;
     @Autowired
     private ObjectMapper mapper;
 
@@ -253,5 +259,14 @@ public class PropertyFetchResource
             e.printStackTrace();
         }
         return PropIDs.builder().propIDs(Collections.emptyList()).build();
+    }
+    @RequestMapping("/addDataToDB")
+    public String addDataToDB() {
+        Utilities utilities = new Utilities();
+        List<PropFilterableSortableData> properties = utilities.getProperties();
+        for (PropFilterableSortableData property : properties) {
+            propertyService.insertProperty(property);
+        }
+        return "Data added successfully";
     }
 }

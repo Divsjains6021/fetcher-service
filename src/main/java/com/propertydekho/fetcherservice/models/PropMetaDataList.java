@@ -1,5 +1,6 @@
 package com.propertydekho.fetcherservice.models;
 
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
