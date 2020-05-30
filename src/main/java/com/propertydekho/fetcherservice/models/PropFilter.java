@@ -1,11 +1,15 @@
 package com.propertydekho.fetcherservice.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 public class PropFilter
@@ -15,14 +19,6 @@ public class PropFilter
 
     @JsonProperty("filter_value")
     private String filterValue;
-
-    public PropFilter() {
-    }
-
-    public PropFilter(String filterType, String filterValue) {
-        this.filterType = filterType;
-        this.filterValue = filterValue;
-    }
 
     public String getName() {
         return filterType;

@@ -11,7 +11,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +34,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/")
 public class PropertyFetchResource
 {
+    public static final String PROPS_TABLE_NAME = "`property`";
     @Autowired
     private ObjectMapper mapper;
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private PropDaoMapper propDaoMapper;
+
+    @Autowired
+    public PropertyFetchResource(PropDaoMapper propDaoMapper) {
+        this.propDaoMapper = propDaoMapper;
+    }
 
     @RequestMapping("/fetch-propids")
     public PropIDs getPropetyIDs() {
@@ -69,6 +82,7 @@ public class PropertyFetchResource
 
         // Step 2: Get all newly added properties(from Kafka)
         PropMetaDataList allNonIndexedProperties = getNewlyAddedProperties(areas);
+//        PropMetaDataList allNonIndexedProperties = new PropMetaDataList(Collections.emptyList());
 
         // Step 3: Remove Area Filter, as this filter is already applied
         filters.remove(areaPropFilter);
@@ -117,8 +131,7 @@ public class PropertyFetchResource
     }
 
     private AreaPropertiesList filterAllProps(FilterableAreaPropsViewInput view) {
-        return restTemplate.postForObject("localhost:8086/filter-all-props",
-                view, AreaPropertiesList.class);
+        return restTemplate.postForObject("http://localhost:8086/filter-all-props", view, AreaPropertiesList.class);
     }
 
     private void deleteIndexedProperties(Map<String, PropMetaDataList> areaWiseIndexedProperties, String area,
@@ -203,20 +216,26 @@ public class PropertyFetchResource
                 PropMetaDataList.class);
     }
 
-    private PropMetaDataList getProps(PropIDs propIDs) {
-        return PropMetaDataList.builder().propFilterableSortableData(
-                propIDs.getPropIDs().stream()
-                        .map(propId -> PropFilterableSortableData.builder()
-                                .propID(propId)
-                                .propName("2BHK for sale in Whitefield, Bangalore")
-                                .propPrice(5500000)
-                                .area("Whitefield")
-                                .bedroom("2BHK")
-                                .saleType("New")
-                                .constructionStatus("Ready to move")
-                                .build())
-                        .collect(Collectors.toList())
-        ).build();
+    private PropMetaDataList getProps(PropIDs propIDsWrapper) {
+        List<String> propIDList = propIDsWrapper.getPropIDs();
+        if (propIDList.isEmpty()) {
+            return new PropMetaDataList();
+        }
+
+        String propIDs = '(' +
+                StringUtils.join(propIDList.stream()
+                                .map(propID -> "'" + propID + "'")
+                                .collect(Collectors.toList()),
+                        ','
+                ) +
+                ')';
+
+
+        String sqlQuery = "select * from " + PROPS_TABLE_NAME + "where `prop_id` in " + propIDs + ";";
+        List<PropFilterableSortableData> props = jdbcTemplate.query(sqlQuery, propDaoMapper);
+        return PropMetaDataList.builder()
+                .propFilterableSortableData(props)
+                .build();
     }
 
     private List<PropFilterableSortableData> getPropsFromKafka(List<String> areas) {

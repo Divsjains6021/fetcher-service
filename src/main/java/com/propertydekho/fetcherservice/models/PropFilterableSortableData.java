@@ -1,39 +1,43 @@
 package com.propertydekho.fetcherservice.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Data
 @Builder
-public class PropFilterableSortableData {
+public class PropFilterableSortableData
+{
+    @Id
     @JsonProperty("prop_id")
     private String propID;
+
     @JsonProperty("prop_name")
     private String propName;
+
     @JsonProperty("prop_price")
-    private double propPrice;
+    private Double propPrice;
+
+    @JsonProperty("sqft")
+    private Integer sqft;
+
     @JsonProperty("bedroom")
     private String bedroom;
+
     @JsonProperty("sale_type")
     private String saleType;
+
     @JsonProperty("constructn_status")
     private String constructionStatus;
+
     @JsonProperty("area")
     private String area;
-
-    public PropFilterableSortableData() {
-
-    }
-
-    public PropFilterableSortableData(String propID, String propName, double propPrice, String bedroom,
-                                      String saleType, String constructionStatus, String area) {
-        this.propID = propID;
-        this.propName = propName;
-        this.propPrice = propPrice;
-        this.bedroom = bedroom;
-        this.saleType = saleType;
-        this.constructionStatus = constructionStatus;
-        this.area = area;
-    }
 }
