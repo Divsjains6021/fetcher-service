@@ -3,6 +3,7 @@ package com.propertydekho.fetcherservice.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

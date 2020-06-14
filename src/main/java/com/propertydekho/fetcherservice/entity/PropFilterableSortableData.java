@@ -1,10 +1,11 @@
-package com.propertydekho.fetcherservice.models;
+package com.propertydekho.fetcherservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import utilities.Utilities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -56,4 +57,11 @@ public class PropFilterableSortableData
                 .build();
         return Arrays.asList(dummyProp);
     }
+
+    public PropFilterableSortableData() {
+
+    }
+
+
+
 }
