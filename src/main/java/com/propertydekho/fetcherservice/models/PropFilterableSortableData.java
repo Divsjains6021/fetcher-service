@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Arrays;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,4 +42,18 @@ public class PropFilterableSortableData
 
     @JsonProperty("area")
     private String area;
+
+    public static List<PropFilterableSortableData> createDummyProperties() {
+        PropFilterableSortableData dummyProp = PropFilterableSortableData.builder()
+                .sqft(1234)
+                .propPrice(234343.0)
+                .bedroom("1 BHK")
+                .area("WhiteField")
+                .saleType("New")
+                .constructionStatus("Ready to move")
+                .propName("Dummy Property")
+                .propID("dummy-ID")
+                .build();
+        return Arrays.asList(dummyProp);
+    }
 }
