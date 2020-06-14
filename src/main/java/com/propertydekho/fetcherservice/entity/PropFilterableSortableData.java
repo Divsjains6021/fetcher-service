@@ -10,6 +10,7 @@ import utilities.Utilities;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -55,13 +56,6 @@ public class PropFilterableSortableData
                 .propName("Dummy Property")
                 .propID("dummy-ID")
                 .build();
-        return Arrays.asList(dummyProp);
+        return Collections.singletonList(dummyProp);
     }
-
-    public PropFilterableSortableData() {
-
-    }
-
-
-
 }

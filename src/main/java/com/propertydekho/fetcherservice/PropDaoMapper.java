@@ -1,6 +1,6 @@
 package com.propertydekho.fetcherservice;
 
-import com.propertydekho.fetcherservice.models.PropFilterableSortableData;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

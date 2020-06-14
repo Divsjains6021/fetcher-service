@@ -1,17 +1,12 @@
 package com.propertydekho.fetcherservice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import com.propertydekho.fetcherservice.handlers.PropertiesDataFetchHandler;
 import com.propertydekho.fetcherservice.models.AreaPropertiesList;
 import com.propertydekho.fetcherservice.models.PropFilter;
-import com.propertydekho.fetcherservice.models.PropFilterableSortableData;
 import com.propertydekho.fetcherservice.models.PropIDs;
 import com.propertydekho.fetcherservice.models.PropMetaDataList;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.propertydekho.fetcherservice.config.KafkaConsumerConfiguration;
-import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
-import com.propertydekho.fetcherservice.listener.AreaIndexerConsumer;
-import com.propertydekho.fetcherservice.models.*;
 import com.propertydekho.fetcherservice.service.PropertyService;
 import com.propertydekho.fetcherservice.views.FilterableAreaPropsViewInput;
 import com.propertydekho.fetcherservice.views.InitPropViewInput;
@@ -23,20 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import utilities.Utilities;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.Duration;
-import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController

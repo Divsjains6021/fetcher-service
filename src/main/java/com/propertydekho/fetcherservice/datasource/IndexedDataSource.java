@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertydekho.fetcherservice.PropDaoMapper;
 import com.propertydekho.fetcherservice.handlers.ResolutionGroup;
 import com.propertydekho.fetcherservice.handlers.Resolvable;
-import com.propertydekho.fetcherservice.models.PropFilterableSortableData;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import com.propertydekho.fetcherservice.models.PropIDs;
 import com.propertydekho.fetcherservice.models.PropMetaDataList;
 import org.apache.tomcat.util.buf.StringUtils;

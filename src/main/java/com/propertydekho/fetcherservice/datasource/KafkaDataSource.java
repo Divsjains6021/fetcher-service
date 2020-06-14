@@ -5,7 +5,7 @@ import com.propertydekho.fetcherservice.handlers.ResolutionGroup;
 import com.propertydekho.fetcherservice.handlers.Resolvable;
 import com.propertydekho.fetcherservice.listener.AreaIndexerConsumer;
 import com.propertydekho.fetcherservice.models.AreaIndexer;
-import com.propertydekho.fetcherservice.models.PropFilterableSortableData;
+import com.propertydekho.fetcherservice.entity.PropFilterableSortableData;
 import com.propertydekho.fetcherservice.models.PropMetaDataList;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
