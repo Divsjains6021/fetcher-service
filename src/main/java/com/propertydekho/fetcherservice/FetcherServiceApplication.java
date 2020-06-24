@@ -9,9 +9,12 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import javax.sql.DataSource;
 
 @SpringBootApplication(exclude = KafkaAutoConfiguration.class)
+@EnableSwagger2
 public class FetcherServiceApplication
 {
 
